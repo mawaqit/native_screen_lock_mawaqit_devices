@@ -33,9 +33,7 @@ class ScreenControlPlugin: FlutterPlugin, MethodCallHandler {
         AsyncTask.execute {
             try {
                 val commands = listOf(
-                    "mount -o rw,remount /",
-                    "cd /sys/class/hdmi/hdmi/attr",
-                    "echo 0 > phy_power"
+                    "service call hdmi_control 31 i32 4 i32 0"
                 )
                 executeCommand(commands, result)
             } catch (e: Exception) {
@@ -73,10 +71,11 @@ class ScreenControlPlugin: FlutterPlugin, MethodCallHandler {
     private fun toggleBoxScreenOn(result: Result) {
         AsyncTask.execute {
             try {
+            
                 val commands = listOf(
-                    "mount -o rw,remount /",
-                    "cd /sys/class/hdmi/hdmi/attr",
-                    "echo 1 > phy_power"
+                    "settings put global hdmi_control_enabled 0",
+                    "sleep 1",
+                    "settings put global hdmi_control_enabled 1"
                 )
                 executeCommand(commands, result)
             } catch (e: Exception) {
